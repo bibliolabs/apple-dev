@@ -4,6 +4,7 @@ require "bundler/setup"
 require 'optparse'
 require 'yaml'
 require 'apple-dev'
+require 'optparse'
 
 def ensure_file_specified_and_exists(name, file)
   raise OptionParser::MissingArgument, name if file.nil?
