@@ -91,11 +91,11 @@ module Apple
 	    debug page.title
 
 	    # Log in to Apple Developer portal if we're presented with a login form.
-	    form = page.form_with(:name => 'appleConnectForm')
+	    form = page.forms.first if page.uri.to_s.include?('login')
 	    if form
 	      info "Logging in with Apple ID '#{@login}'."
-	      form.theAccountName = @login
-	      form.theAccountPW = @passwd
+	      form.field_with(type: 'text').value = @login
+	      form.field_with(type: 'password').value = @passwd
 	      page = form.click_button
 	      debug "Loading #{url}"
 	      #page = @agent.get(url)
@@ -228,6 +228,8 @@ module Apple
 
 	    certs = []
 	    json['certRequests'].each do |cert|
+	      canDownload = cert['canDownload']
+	      next unless canDownload
 	      c = Certificate.new()
 	      displayId = cert['certificateId']
 	      typeId = cert['certificateTypeDisplayId']
